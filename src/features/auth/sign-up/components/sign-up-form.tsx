@@ -105,7 +105,7 @@ export function SignUpForm({
           )}
         />
         <Button className='mt-2' disabled={isLoading}>
-          Create Account
+          注册账号
         </Button>
 
         <div className='relative my-2'>
@@ -114,7 +114,7 @@ export function SignUpForm({
           </div>
           <div className='relative flex justify-center text-xs uppercase'>
             <span className='bg-background text-muted-foreground px-2'>
-              Or continue with
+              或者使用以下方式注册
             </span>
           </div>
         </div>

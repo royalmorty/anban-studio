@@ -18,13 +18,17 @@ import { Input } from '@/components/ui/input'
 import { PasswordInput } from '@/components/password-input'
 
 const formSchema = z.object({
-  email: z.email({
-    error: (iss) => (iss.input === '' ? 'Please enter your email' : undefined),
+  username: z.string({
+    error: (iss) => (iss.input === '' ? '请输入账号' : undefined),
   }),
   password: z
     .string()
-    .min(1, 'Please enter your password')
-    .min(7, 'Password must be at least 7 characters long'),
+    .min(1, '请输入密码')
+    .min(7, '密码必须包含至少 7 个字符')
+    .max(20, '密码最多包含 20 个字符')
+    .regex(/[a-zA-Z]/, '密码必须包含字母')
+    .regex(/[0-9]/, '密码必须包含数字')
+    .regex(/[!@#$%^&*(),.?":{}|<>]/, '密码必须包含特殊字符'),
 })
 
 export function UserAuthForm({
@@ -36,7 +40,7 @@ export function UserAuthForm({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: '',
+      username: '',
       password: '',
     },
   })
@@ -60,12 +64,12 @@ export function UserAuthForm({
       >
         <FormField
           control={form.control}
-          name='email'
+          name='username'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>账号</FormLabel>
               <FormControl>
-                <Input placeholder='name@example.com' {...field} />
+                <Input placeholder='请输入账号' {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -76,7 +80,7 @@ export function UserAuthForm({
           name='password'
           render={({ field }) => (
             <FormItem className='relative'>
-              <FormLabel>Password</FormLabel>
+              <FormLabel>密码</FormLabel>
               <FormControl>
                 <PasswordInput placeholder='********' {...field} />
               </FormControl>
@@ -85,13 +89,13 @@ export function UserAuthForm({
                 to='/forgot-password'
                 className='text-muted-foreground absolute end-0 -top-0.5 text-sm font-medium hover:opacity-75'
               >
-                Forgot password?
+                忘记密码?
               </Link>
             </FormItem>
           )}
         />
         <Button className='mt-2' disabled={isLoading}>
-          Login
+          登录
         </Button>
 
         <div className='relative my-2'>
@@ -100,7 +104,7 @@ export function UserAuthForm({
           </div>
           <div className='relative flex justify-center text-xs uppercase'>
             <span className='bg-background text-muted-foreground px-2'>
-              Or continue with
+              或者使用以下方式登录
             </span>
           </div>
         </div>

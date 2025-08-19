@@ -31,7 +31,7 @@ export const sidebarData: SidebarData = {
   },
   teams: [
     {
-      name: 'Shadcn Admin',
+      name: '案板 AI',
       logo: Command,
       plan: 'Vite + ShadcnUI',
     },
@@ -51,7 +51,7 @@ export const sidebarData: SidebarData = {
       title: 'General',
       items: [
         {
-          title: 'Dashboard',
+          title: '首页',
           url: '/',
           icon: LayoutDashboard,
         },
