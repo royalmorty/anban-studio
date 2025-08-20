@@ -10,7 +10,7 @@ export const DEFAULT_DEVICE: Device = {
   id: "all",
   mobile: "",
   kind: DeviceKind.DeviceKindWeChat,
-  avatar: "/vx.png",
+  avatar: "/images/vx.png",
   nickname: "所有设备",
   remarks: "",
   enable: false,

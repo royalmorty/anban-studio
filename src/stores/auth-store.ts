@@ -3,11 +3,10 @@ import { getCookie, setCookie, removeCookie } from '@/lib/cookies'
 
 const ACCESS_TOKEN = 'auth-access-token'
 
-interface AuthUser {
-  accountNo: string
-  email: string
-  role: string[]
-  exp: number
+export interface AuthUser {
+  name: string
+  last_ip: string
+  company: string
 }
 
 interface AuthState {

@@ -1,10 +1,10 @@
 import axios from 'axios'
-import { handleServerError } from './handle-server-error'
 import { useAuthStore } from '@/stores/auth-store'
+import { handleServerError } from '@/utils/handle-server-error'
 
 
 // 创建axios实例
-const api = axios.create({
+const client = axios.create({
   // 设置基础URL，可从环境变量中读取
   baseURL: import.meta.env.VITE_API_BASE_URL,
   withCredentials: false,
@@ -15,7 +15,7 @@ const api = axios.create({
 })
 
 // 请求拦截器 - 添加认证token等
-api.interceptors.request.use(
+client.interceptors.request.use(
   (config) => {
     // 从auth store获取token
     const token = useAuthStore.getState().auth.accessToken
@@ -33,7 +33,7 @@ api.interceptors.request.use(
 )
 
 // 响应拦截器 - 统一处理响应和错误
-api.interceptors.response.use(
+client.interceptors.response.use(
   (response) => {
     // 可以在这里对响应数据进行统一处理
 
@@ -55,4 +55,4 @@ api.interceptors.response.use(
   }
 )
 
-export default api
+export default client

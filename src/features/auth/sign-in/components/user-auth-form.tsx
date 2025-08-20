@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -16,8 +16,8 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { PasswordInput } from '@/components/password-input'
-// 导入认证服务
-import { authService } from '@/features/auth/services/auth-service'
+import { TakeAuthToken } from '@/services/take-auth-token'
+import { useAuthStore } from '@/stores/auth-store'
 
 const formSchema = z.object({
   username: z.string({
@@ -47,25 +47,29 @@ export function UserAuthForm({
     },
   })
 
-  function onSubmit(data: z.infer<typeof formSchema>) {
+  const auth = useAuthStore()
+  const onSubmit = useCallback(async (data: z.infer<typeof formSchema>) => {
+
+    if (isLoading) return
+
     setIsLoading(true)
 
-    // 使用认证服务处理登录请求
-    authService.login(data)
-      .then((result) => {
-        // 登录成功处理
-        console.log('登录成功:', result)
-        // 跳转到首页
-        window.location.href = '/'
-      })
-      .catch((error) => {
-        // 错误已在authService中处理
-        console.error('登录失败:', error)
-      })
-      .finally(() => {
-        setIsLoading(false)
-      })
-  }
+    try {
+      const result = await TakeAuthToken(data)
+      // 登录成功处理
+      console.log('登录成功:', result)
+      auth.auth.setAccessToken(result.token)
+
+      // 跳转到首页，认证信息将在进入受保护路由时自动获取
+      window.location.href = '/'
+    } catch (error) {
+      // 错误已在authService中处理
+      console.error('登录失败:', error)
+    } finally {
+      setIsLoading(false)
+    }
+
+  }, [isLoading, auth.auth])
 
   return (
     <Form {...form}>

@@ -17,6 +17,11 @@ import { sidebarData } from './data/sidebar-data'
 import { NavGroup } from './nav-group'
 import { NavUser } from './nav-user'
 import { TeamSwitcher } from './team-switcher'
+import { DeviceSwitcher } from './device-switcher'
+import { useCallback, useMemo, useState } from 'react'
+import { Device } from '@/types/device'
+import { useWorkspaceStore } from '@/stores/workspace'
+import { useAuthStore } from '@/stores/auth-store'
 
 type AuthenticatedLayoutProps = {
   children?: React.ReactNode
@@ -24,6 +29,18 @@ type AuthenticatedLayoutProps = {
 
 export function AuthenticatedLayout({ children }: AuthenticatedLayoutProps) {
   const defaultOpen = getCookie('sidebar_state') !== 'false'
+
+  const auth = useAuthStore()
+  const store = useWorkspaceStore()
+
+  const active = useMemo(() => store.active ? store.devices[store.active] : null, [store.active, store.devices])
+
+  const [device, setDevice] = useState<Device | null>(active)
+
+  const handleSwitchDevice = useCallback((device: Device) => {
+    setDevice(device)
+  }, [])
+
   return (
     <SearchProvider>
       <SidebarProvider defaultOpen={defaultOpen}>
@@ -31,7 +48,8 @@ export function AuthenticatedLayout({ children }: AuthenticatedLayoutProps) {
           <SkipToMain />
           <AppSidebar>
             <SidebarHeader>
-              <TeamSwitcher teams={sidebarData.teams} />
+              {/* <TeamSwitcher teams={sidebarData.teams} /> */}
+              <DeviceSwitcher active={device} devices={store.devices} onSwitchDevice={handleSwitchDevice} />
             </SidebarHeader>
             <SidebarContent>
               {sidebarData.navGroups.map((props) => (
@@ -39,7 +57,7 @@ export function AuthenticatedLayout({ children }: AuthenticatedLayoutProps) {
               ))}
             </SidebarContent>
             <SidebarFooter>
-              <NavUser user={sidebarData.user} />
+              {auth.auth.user && <NavUser user={auth.auth.user} />}
             </SidebarFooter>
             <SidebarRail />
           </AppSidebar>
