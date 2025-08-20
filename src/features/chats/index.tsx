@@ -82,7 +82,7 @@ export function Chats() {
             <div className='bg-background sticky top-0 z-10 -mx-4 px-4 pb-3 shadow-md sm:static sm:z-auto sm:mx-0 sm:p-0 sm:shadow-none'>
               <div className='flex items-center justify-between py-2'>
                 <div className='flex gap-2'>
-                  <h1 className='text-2xl font-bold'>Inbox</h1>
+                  <h1 className='text-2xl font-bold'>聚合聊天</h1>
                   <MessagesSquare size={20} />
                 </div>
 
@@ -246,7 +246,7 @@ export function Chats() {
                                   className={cn(
                                     'text-foreground/75 mt-1 block text-xs font-light italic',
                                     msg.sender === 'You' &&
-                                      'text-primary-foreground/85 text-end'
+                                    'text-primary-foreground/85 text-end'
                                   )}
                                 >
                                   {format(msg.timestamp, 'h:mm a')}

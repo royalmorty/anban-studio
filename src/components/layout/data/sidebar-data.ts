@@ -66,7 +66,7 @@ export const sidebarData: SidebarData = {
           icon: Package,
         },
         {
-          title: 'Chats',
+          title: '聚合聊天',
           url: '/chats',
           badge: '3',
           icon: MessagesSquare,

@@ -16,6 +16,8 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { PasswordInput } from '@/components/password-input'
+// 导入认证服务
+import { authService } from '@/features/auth/services/auth-service'
 
 const formSchema = z.object({
   username: z.string({
@@ -26,9 +28,9 @@ const formSchema = z.object({
     .min(1, '请输入密码')
     .min(7, '密码必须包含至少 7 个字符')
     .max(20, '密码最多包含 20 个字符')
-    .regex(/[a-zA-Z]/, '密码必须包含字母')
-    .regex(/[0-9]/, '密码必须包含数字')
-    .regex(/[!@#$%^&*(),.?":{}|<>]/, '密码必须包含特殊字符'),
+  // .regex(/[a-zA-Z]/, '密码必须包含字母')
+  // .regex(/[0-9]/, '密码必须包含数字')
+  // .regex(/[!@#$%^&*(),.?":{}|<>]/, '密码必须包含特殊字符'),
 })
 
 export function UserAuthForm({
@@ -47,12 +49,22 @@ export function UserAuthForm({
 
   function onSubmit(data: z.infer<typeof formSchema>) {
     setIsLoading(true)
-    // eslint-disable-next-line no-console
-    console.log(data)
 
-    setTimeout(() => {
-      setIsLoading(false)
-    }, 3000)
+    // 使用认证服务处理登录请求
+    authService.login(data)
+      .then((result) => {
+        // 登录成功处理
+        console.log('登录成功:', result)
+        // 跳转到首页
+        window.location.href = '/'
+      })
+      .catch((error) => {
+        // 错误已在authService中处理
+        console.error('登录失败:', error)
+      })
+      .finally(() => {
+        setIsLoading(false)
+      })
   }
 
   return (
